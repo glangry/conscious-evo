@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Карта эволюции сознания</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+
 <style>
+/* ===== BASE ===== */
 :root{--bg:#0d0d0f;--bg2:#131316;--bg3:#1a1a1f;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#e8e6df;--text2:#8a8880;--text3:#555350;--accent:#c8a96e}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:"JetBrains Mono",monospace;min-height:100vh}
@@ -76,6 +78,67 @@ tr:last-child td{border-bottom:none}
 .axtip{position:fixed;background:#1a1a1f;border:.5px solid rgba(255,255,255,0.18);border-radius:5px;padding:10px 14px;font-size:11px;color:#8a8880;max-width:280px;line-height:1.65;pointer-events:none;z-index:300;display:none;box-shadow:0 4px 24px rgba(0,0,0,0.5)}
 .axtip b{color:#c8a96e;font-weight:500}
 @media(max-width:900px){.layout{grid-template-columns:185px 1fr!important}.info{grid-column:1!important;grid-row:3!important;grid-column:1/3!important;margin-top:14px!important}}
+
+/* ===== FLOW ===== */
+/* ===== FLOW OVERLAY ===== */
+#flow-overlay{position:fixed;inset:0;background:rgba(13,13,15,0.97);z-index:200;display:none;overflow-y:auto}
+#flow-overlay.open{display:flex;align-items:flex-start;justify-content:center;padding:48px 24px 80px}
+.flow-wrap{max-width:680px;width:100%}
+.flow-close{position:fixed;top:20px;right:24px;background:transparent;border:.5px solid var(--border2);border-radius:4px;padding:6px 14px;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;z-index:201}
+.flow-close:hover{color:var(--text);border-color:var(--text3)}
+.flow-step-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:16px}
+.flow-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,4vw,34px);font-weight:300;line-height:1.2;margin-bottom:8px;color:var(--text)}
+.flow-title em{font-style:italic;color:var(--accent)}
+.flow-sub{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:28px}
+.flow-progress{display:flex;gap:6px;margin-bottom:36px}
+.flow-prog-dot{width:28px;height:2px;border-radius:2px;background:var(--border2);transition:background .3s}
+.flow-prog-dot.done{background:var(--accent)}
+.flow-prog-dot.active{background:var(--text2)}
+.flow-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:28px}
+.flow-card{background:var(--bg2);border:.5px solid var(--border);border-radius:6px;padding:18px;cursor:pointer;transition:border-color .2s,background .2s;user-select:none;display:flex;flex-direction:column;gap:0}
+.flow-card:hover{background:var(--bg3)}
+.flow-card.selected{border-color:var(--accent)!important;background:rgba(200,169,110,0.06)}
+.flow-card-num{font-size:9px;color:var(--text3);letter-spacing:.12em;margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+.flow-card-sit{font-size:12px;color:var(--text);line-height:1.65;flex:1}
+.flow-card-check{width:18px;height:18px;border-radius:50%;border:.5px solid var(--border2);margin-top:14px;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .2s;flex-shrink:0}
+.flow-card.selected .flow-card-check{background:var(--accent);border-color:var(--accent);color:#000}
+.flow-hint{font-size:11px;color:var(--text3);margin-bottom:20px;line-height:1.6;padding:10px 14px;background:var(--bg2);border-left:2px solid var(--border2);border-radius:0 4px 4px 0}
+.flow-btn{padding:10px 28px;border:.5px solid var(--accent);border-radius:4px;background:rgba(200,169,110,0.08);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;cursor:pointer;transition:background .2s}
+.flow-btn:hover{background:rgba(200,169,110,0.18)}
+.flow-btn:disabled{opacity:.25;cursor:default;pointer-events:none}
+.flow-btn-sec{padding:10px 20px;border:.5px solid var(--border2);border-radius:4px;background:transparent;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;cursor:pointer}
+.flow-btn-sec:hover{border-color:var(--text3);color:var(--text2)}
+/* Result */
+.flow-result-map{width:100%;background:var(--bg2);border:.5px solid var(--border);border-radius:6px;margin-bottom:28px;overflow:hidden}
+.flow-result-reveal{background:var(--bg2);border:.5px solid var(--accent);border-radius:6px;padding:24px;margin-bottom:24px;text-align:center}
+.flow-reveal-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.flow-reveal-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(28px,5vw,44px);font-weight:300;line-height:1.1;margin-bottom:4px}
+.flow-reveal-work{font-size:10px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+.flow-reveal-desc{font-size:13px;color:var(--text2);line-height:1.75}
+.flow-result-section{margin-bottom:28px}
+.flow-result-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.flow-result-text{font-size:13px;color:var(--text2);line-height:1.75}
+.flow-result-q{font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-style:italic;color:var(--text);line-height:1.65;padding:16px 20px;background:rgba(200,169,110,0.05);border-left:2px solid var(--accent);border-radius:0 4px 4px 0}
+.flow-next-list{display:flex;flex-direction:column;gap:10px}
+.flow-next-card{background:var(--bg3);border:.5px solid var(--border);border-radius:5px;padding:14px 18px;cursor:pointer;transition:border-color .2s}
+.flow-next-card:hover{border-color:var(--border2)}
+.flow-next-card-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;margin-bottom:4px}
+.flow-next-card-desc{font-size:11px;color:var(--text3);line-height:1.55}
+
+.flow-fork-card{background:var(--bg2);border:.5px solid var(--border);border-radius:6px;padding:16px 20px;cursor:pointer;transition:border-color .2s,background .2s}
+.flow-fork-card:hover{background:var(--bg3)}
+.flow-fork-hero{font-family:"Cormorant Garamond",Georgia,serif;font-size:17px;margin-bottom:6px;line-height:1.2}
+.flow-fork-dir{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;opacity:.8}
+.flow-fork-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px}
+.flow-fork-end{font-size:11px;color:var(--text3);font-style:italic}
+
+/* ===== COMPARE ===== */
+#cmp-label:hover #cmp-box{border-color:var(--text2)}
+.cmp-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:3px;font-size:10px;font-family:"JetBrains Mono",monospace;cursor:pointer;border:.5px solid;transition:opacity .2s}
+.cmp-tag:hover{opacity:.8}
+.cmp-tag-rm{font-size:12px;line-height:1;opacity:.6}
+.cmp-tag-rm:hover{opacity:1}
+.hb.cmp-on{border-left-width:3px!important;background:var(--bg3)!important}
 </style>
 </head>
 <body>
@@ -101,24 +164,64 @@ tr:last-child td{border-bottom:none}
 <div class="li"><div class="ldh"></div>конец</div>
 <div class="li"><div class="ll"></div>траектория</div>
 </div>
-<button onclick="openFlow()" style="padding:8px 20px;border:.5px solid var(--accent);border-radius:4px;background:rgba(200,169,110,0.07);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;cursor:pointer;white-space:nowrap" onmouseover="this.style.background='rgba(200,169,110,0.15)'" onmouseout="this.style.background='rgba(200,169,110,0.07)'">✦ Найти свой путь</button>
+<button id="flow-btn" onclick="openFlow()" style="padding:8px 20px;border:.5px solid var(--accent);border-radius:4px;background:rgba(200,169,110,0.07);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;cursor:pointer;white-space:nowrap" onmouseover="this.style.background='rgba(200,169,110,0.15)'" onmouseout="this.style.background='rgba(200,169,110,0.07)'">✦ Найти свой путь</button>
 </div>
 </header>
 </div>
 <div class="tabs" id="tabs"></div>
 <div class="layout">
 <div style="grid-column:1;grid-row:1;display:flex;flex-direction:column;gap:0">
-<input id="search" type="text" placeholder="Поиск героя..." oninput="filterHeroes(this.value)" style="margin-bottom:8px;padding:6px 10px;background:var(--bg3);border:.5px solid var(--border2);border-radius:4px;color:var(--text);font-family:JetBrains Mono,monospace;font-size:11px;outline:none;width:100%">
+<div style="position:relative;margin-bottom:8px">
+<input id="search" type="text" placeholder="Поиск героя..." autocomplete="off" oninput="filterHeroes(this.value)" style="padding:6px 28px 6px 10px;background:var(--bg3);border:.5px solid var(--border2);border-radius:4px;color:var(--text);font-family:JetBrains Mono,monospace;font-size:11px;outline:none;width:100%">
+<span id="search-clear" onclick="clearSearch()" style="display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);font-size:14px;line-height:1">✕</span>
+</div>
 <div class="sb" id="sb"><div class="sbl">Герои</div></div>
 </div>
 <div class="ca" id="ca"></div>
+<div id="cmp-bar-area"></div>
 <div class="info" id="info"><div class="idef">Выберите героя, чтобы увидеть описание его пути</div></div>
 </div>
 </div>
 
+
+<div class="axtip" id="axtip"></div>
+
+
+<div class="axtip" id="axtip"></div>
+
+
+
+<div id="flow-overlay">
+  <button class="flow-close" onclick="closeFlow()">✕ закрыть</button>
+  <div class="flow-wrap" id="flow-content"></div>
+</div>
+
+
+
+
+
+
+
+
 <script>
+// ================================================================
+// FEATURES — включай/выключай целые блоки
+// ================================================================
+var FEATURES = {
+  flow:     false,  // «Найти свой путь» — временно отключено
+  compare:  true,   // Сравнение траекторий
+  welcome:  true,   // Экран приветствия
+  patterns: true,   // Паттерны
+  anime:    false,  // временно скрыта
+  skazki:   false,  // временно скрыта
+};
+
+// ================================================================
+// ДАННЫЕ И КОНФИГ
+// ================================================================
 var UNI=[
   {id:"all",lb:"Все"},
+  {id:"biography",lb:"Биографии"},
   {id:"ruslit",lb:"Русская лит-ра"},
   {id:"worldlit",lb:"Мировая лит-ра"},
   {id:"films",lb:"Кино"},
@@ -131,6 +234,7 @@ var UNI=[
 // Mapping: tab id -> which hero u-values it includes
 var UNI_MAP={
   "all":null,
+  "biography":["biography"],
   "ruslit":["ruslit"],
   "worldlit":["worldlit"],
   "films":["films"],
@@ -356,6 +460,42 @@ var ALL=[
   ,{id:"lavr",u:"worldlit",n:"Лавр",w:"Лавр, Водолазкин",c:"#A09080",d:"Четыре имени — четыре жизни. Путь через вину, юродство, странничество к схиме. Самый полный вертикальный arc в современной русской литературе.",analysis:"<b>Арсений→Устин:</b> знахарь который не спас Устину. Вина как топливо всего пути.<br><b>Юродство:</b> отказ от себя через унижение. Не психология — духовная практика.<br><b>Амвросий→Лавр:</b> каждое имя — новый уровень отречения от эго. Финал — растворение в молитве.",question:"Можно ли искупить непоправимое — и если да, то как?",links:["nekhlyudov","bishop","siddhartha"],p:[{l:"A",s:"blue",v:13.5,m:"Арсений — знахарь, живёт с Устиной"},{l:"B",s:"blue",v:10.5,m:"Смерть Устины — вина как точка отсчёта"},{l:"C",s:"violet",v:15.5,m:"Юродивый Устин — отречение от себя"},{l:"D",s:"green",v:18,m:"Странник Амвросий — путь через Иерусалим"},{l:"E",s:"teal",v:21,m:"Схимник Лавр — растворение в молитве"}]}
   ,{id:"fandorin",u:"worldlit",n:"Эраст Фандорин",w:"Фандорин, Акунин",c:"#5B8DD9",d:"Оранжевый уровень при высокой духовной чистоте. Потери не ломают — только убирают лишнее.",analysis:"<b>Кодекс:</b> Фандорин действует из оранжевого — интеллект, достижение, индивидуализм. Но его оранжевый особый: без жадности, без эго в плохом смысле.<br><b>Потери:</b> гибель жены, провалы, предательства — каждый раз встаёт. Не через надежду а через долг.<br><b>Японский след:</b> бусидо как кодекс даёт ему синий каркас внутри оранжевой жизни. Редкое сочетание.",question:"Есть ли у вас внутренний кодекс — который держит вас когда всё рушится?",links:["obiwan","hank_s","aragorn"],p:[{l:"A",s:"orange",v:13.5,m:"Молодой чиновник — наивность, первые потери"},{l:"B",s:"orange",v:15,m:"Японский след — бусидо как внутренний кодекс"},{l:"C",s:"orange",v:16,m:"Зрелый Фандорин — потери не ломают, только убирают лишнее"}]}
 
+
+  ,{id:"tolstoy_bio",u:"biography",n:"Лев Толстой",w:"Биография",c:"#8FA680",
+    d:"Прожил дольше всех — и умер в пути. Пропасть между тем что знал и тем как жил стала невыносимой.",
+    sit:"Граф, гений, моралист. Проповедовал опрощение — жил в роскоши. В 82 года тайно ушёл из дома. Умер на станции Астапово.",
+    question:"Что делать с пропастью между тем что знаешь — и тем как живёшь?",
+    links:["andrey","levin","pierre","sergiy"],
+    p:[
+      {l:"A",s:"beige",v:14,m:"Рождение — природная живость, высокий старт"},
+      {l:"B",s:"violet",v:13,m:"Смерть матери (2 года) — первое знание потери"},
+      {l:"C",s:"red",v:12,m:"Смерть отца (9 лет) — падение"},
+      {l:"D",s:"red-blue",v:13,m:"16–22: кутежи + дневник — первая рефлексия"},
+      {l:"E",s:"blue-orange",v:15,m:"22–27: Кавказ, «Детство» — интеллект как путь"},
+      {l:"F",s:"orange",v:14,m:"27–35: слава, Европа, казнь в Париже — откат"},
+      {l:"G",s:"orange-green",v:17,m:"35–50: великие романы, Арзамасский ужас — пик"},
+      {l:"H",s:"green",v:15,m:"50–55: «Исповедь», кризис — знание обгоняет жизнь"},
+      {l:"I",s:"green",v:16,m:"55–75: опрощение — медленный подъём"},
+      {l:"J",s:"green-yellow",v:16,m:"82: уход из Ясной Поляны, Астапово — единственно последовательный поступок"}
+    ]}
+  ,{id:"dostoevsky_bio",u:"biography",n:"Фёдор Достоевский",w:"Биография",c:"#9B7B6E",
+    d:"Удерживал страх и любовь одновременно — через разных персонажей. Страдание как способ познания.",
+    sit:"Приговорён к расстрелу — помилован в последний момент. Каторга. Игромания. Смерть близких. И при этом — «Братья Карамазовы».",
+    question:"Можно ли любить человека — зная всё самое тёмное что в нём есть?",
+    links:["raskolnikov","myshkin","ivan_karamazov","alyosha","mitya"],
+    p:[
+      {l:"A",s:"beige",v:15.5,m:"Рождение в больнице для бедных — контакт с чужим страданием с рождения"},
+      {l:"B",s:"red",v:14.5,m:"2–15: строгий отец, святая мать, религия, нищета"},
+      {l:"C",s:"red-blue",v:13,m:"15 лет: смерть матери и Пушкина — телесное знание о смерти"},
+      {l:"D",s:"blue",v:12,m:"18 лет: гибель отца, первые эпилептические припадки"},
+      {l:"E",s:"blue-orange",v:15,m:"23–25: «Бедные люди» написаны из любви — триумф"},
+      {l:"F",s:"orange",v:12.5,m:"25–26: «Двойник» написан из страха — провал"},
+      {l:"G",s:"orange-green",v:14,m:"26–28: Петрашевский кружок — идеи справедливости"},
+      {l:"H",s:"green",v:19,m:"28 лет: инсценировка расстрела — мгновенный пик: «жизнь везде жизнь»"},
+      {l:"I",s:"green",v:16.5,m:"28–38: каторга — символ веры через Христа"},
+      {l:"J",s:"green",v:14,m:"38–49: игромания, смерть жены, брата, дочери — широкий диапазон"},
+      {l:"K",s:"green-yellow",v:18,m:"49–59: «Братья Карамазовы», Оптина пустынь, Пушкинская речь"}
+    ]}
 ];
 
 var W=590,H=430,L=82,R=W-60,T=22,B=H-44;
@@ -453,7 +593,7 @@ function mkSVG(heroes,aid,apt,hpt){
   var yat=document.createElementNS(ns,"text");
   yat.setAttribute("text-anchor","middle");yat.setAttribute("font-size","9");
   yat.setAttribute("font-family","JetBrains Mono,monospace");yat.setAttribute("fill","rgba(255,255,255,0.3)");
-  yat.setAttribute("id","lbl-y");yat.style.cursor="help";yat.setAttribute("transform","rotate(-90)");yat.textContent="↑ Эволюция духа";
+  yat.setAttribute("id","lbl-y");yat.style.cursor="help";yat.setAttribute("transform","rotate(-90)");yat.textContent="Эволюция духа →";
   yag.appendChild(yat);svg.appendChild(yag);
 
   for(var hi=0;hi<heroes.length;hi++){
@@ -489,8 +629,10 @@ function mkSVG(heroes,aid,apt,hpt){
           bsym.textContent="∞";g.appendChild(bsym);
           continue;
         }
-        var isApt=aid===h.id&&apt===pi;
-        var isHov=aid===h.id&&hpt===pi&&!isApt;
+        // В compare режиме подсвечиваем точки для героя открытого в карточке (cH)
+        var activeId=(typeof cmpMode!=="undefined"&&cmpMode&&aid==="__cmp__")?cH:aid;
+        var isApt=activeId===h.id&&apt===pi;
+        var isHov=activeId===h.id&&hpt===pi&&!isApt;
         if(isApt)el("circle",{cx:cs[pi].x,cy:cs[pi].y,r:"14",fill:"none",stroke:h.c,"stroke-width":"1","stroke-dasharray":"3 2",opacity:"0.7"},g);
         if(isHov)el("circle",{cx:cs[pi].x,cy:cs[pi].y,r:"11",fill:h.c,"fill-opacity":"0.15",stroke:h.c,"stroke-width":"0.8"},g);
         var circ;
@@ -519,7 +661,20 @@ function mkSVG(heroes,aid,apt,hpt){
 var PATTERNS=[{"id": "natural_purity", "name": "Природная чистота", "desc": "Никогда не теряли свет — не через путь, а через природу. Действуют из любви без рефлексии.", "color": "#2ABFA8", "heroes": ["sonya", "forrest", "myshkin", "totoro", "walle", "ivan_durak"]}, {"id": "teachers", "name": "Учителя", "desc": "Действуют внутри человеческого мира но из другого уровня понимания. Их функция — пробуждение других, не собственный путь.", "color": "#D4B800", "heroes": ["woland", "chapaev", "yoda", "prince", "obiwan", "zosima", "dumbledore", "gandalf", "iroh", "kakashi", "itachi", "baba_yaga", "morpheus", "totoro", "jonathan_seagull", "mufasa"]}, {"id": "beyond_path", "name": "Выход за пределы", "desc": "Пришли через путь к смене природы — переход за пределы индивидуального восприятия и вида.", "color": "#4A7ABF", "heroes": ["zima", "toyvo", "humanity", "lucy", "cincinnatus", "bran", "jonathan_seagull", "akira_char", "mufasa"]}, {"id": "orange_decay", "name": "Оранжевая деградация", "desc": "Высокий интеллект, достижения — но духовный уровень не растёт или падает. Ум без сердца как тупик.", "color": "#F97316", "heroes": ["walter", "tatarsky", "humbert", "ivan_karamazov", "thanos", "luzhin", "preobrazhensky", "eren", "light", "scar", "katerina", "voldemort", "salieri"]}, {"id": "high_mind_low_spirit", "name": "Высокое понимание при низком духе", "desc": "Видят иллюзии системы насквозь — и используют это для разрушения.", "color": "#C8A030", "heroes": ["joker", "tyler", "malvo", "ivan_karamazov", "light", "hannibal", "iago", "dio", "koschei", "ursula", "voldemort"]}, {"id": "transformation", "name": "Трансформация через разрушение", "desc": "Падение вниз по духовной оси — и возвращение выше исходной точки. Финальная точка выше начальной.", "color": "#C0392B", "heroes": ["pirsig", "raskolnikov", "jesse", "nekhlyudov", "loki", "rust", "jaime", "mitya", "zuko", "naruto", "sasuke", "edward", "snape", "harry", "simba", "shrek", "elsa", "iroh", "lelouch", "neo"]}, {"id": "vertical_growth", "name": "Вертикальный рост без горизонтального", "desc": "Личность не меняется — но качество присутствия и духовный уровень растут.", "color": "#22C55E", "heroes": ["roquentin", "master", "sorokin", "banev"]}];
 var cU="all",cH="all",APT=-1,HOVERPT=-1;
 var searchQ="";
-function filterHeroes(q){searchQ=q.toLowerCase();rSb(gh(cU))}
+function filterHeroes(q){
+  searchQ=q.toLowerCase().trim();
+  var cl=document.getElementById("search-clear");
+  if(cl) cl.style.display=searchQ?"":"none";
+  cH="all";rSb(gh(cU));
+}
+function clearSearch(){
+  searchQ="";
+  var el=document.getElementById("search");
+  if(el) el.value="";
+  var cl=document.getElementById("search-clear");
+  if(cl) cl.style.display="none";
+  cH="all";rSb(gh(cU));
+}
 
 function gh(u){
   var base;
@@ -546,11 +701,7 @@ function rSb(heroes){
   var patBanner="";
   if(cPATTERN){var cp=PATTERNS.find(function(p){return p.id===cPATTERN});if(cp)patBanner="<div style=\"padding:4px 8px 8px;font-size:10px;color:"+cp.color+";border-bottom:1px solid var(--border);margin-bottom:4px\"><span style=\"cursor:pointer\" onclick=\"selectPattern(null)\">✕</span> "+cp.name+"</div>";}
   s.innerHTML="<div class=\"sbl\">Герои</div>"+patBanner;
-  var ab=document.createElement("button");
-  ab.className="hb"+(cH==="all"?" on":"");
-  ab.innerHTML="<span class=\"hbn\" style=\"color:var(--text2)\">Все герои</span><span class=\"hbw\"></span>";
-  ab.onclick=function(){cH="all";rAll()};
-  s.appendChild(ab);
+
   var fh=heroes.filter(function(h){return !searchQ||h.n.toLowerCase().indexOf(searchQ)>=0||h.w.toLowerCase().indexOf(searchQ)>=0});
   for(var i=0;i<fh.length;i++){
     var h=fh[i];
@@ -568,6 +719,13 @@ var cPATTERN=null;
 function selectPattern(pid){
   cPATTERN=(cPATTERN===pid)?null:pid;
   cH="all";
+  if(cPATTERN){
+    cU="all";
+    // Сбрасываем текстовый поиск
+    searchQ="";
+    var searchEl=document.getElementById("search");
+    if(searchEl) searchEl.value="";
+  }
   rAll();
 }
 function hoverPt(idx){HOVERPT=idx;rChart(gh(cU));}
@@ -590,17 +748,31 @@ function hlPtFromChart(idx){
   if(APT>=0&&rows[APT])rows[APT].scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function rChart(heroes){
-  var svgWrap=document.getElementById("chart-svg");
-  if(svgWrap){
-    var newSvg=mkSVG(heroes,cH,APT,HOVERPT);
-    svgWrap.parentNode.replaceChild(newSvg,svgWrap);
-    newSvg.id="chart-svg";
+  var ca=document.getElementById("ca");
+  var ctrl=document.getElementById("chart-controls");
+  ca.innerHTML="";
+  if(ctrl) ca.appendChild(ctrl);
+  else if(FEATURES.compare) ca.appendChild(mkCmpControls());
+  // В режиме сравнения показываем всех выбранных героев
+  if(FEATURES.compare && cmpMode && cmpIds.length>0){
+    var pool=heroes;
+    var allInTab=cmpIds.every(function(id){return pool.some(function(h){return h.id===id;});});
+    if(!allInTab) pool=ALL;
+    ca.appendChild(mkSVG(pool,"__cmp__",APT,HOVERPT));
   } else {
-    // fallback: old behaviour
-    var ca=document.getElementById("ca");
-    ca.innerHTML="";
     ca.appendChild(mkSVG(heroes,cH,APT,HOVERPT));
   }
+}
+function mkCmpControls(){
+  var d=document.createElement("div");
+  d.id="chart-controls";
+  d.style.cssText="display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:8px;min-height:20px";
+  d.innerHTML='<div id="cmp-selected-list" style="display:flex;gap:6px;flex-wrap:wrap;flex:1"></div>'
+    +'<label id="cmp-label" style="display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;padding:4px 10px;border-radius:3px;border:.5px solid transparent;transition:all .2s" onclick="toggleCmpMode()">'
+    +'<span id="cmp-box" style="width:12px;height:12px;border:.5px solid var(--text3);border-radius:2px;background:transparent;flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center"></span>'
+    +'<span id="cmp-label-text" style="font-family:JetBrains Mono,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);transition:color .2s">Сравнить</span>'
+    +'</label>';
+  return d;
 }
 
 function rInfo(heroes){
@@ -624,7 +796,7 @@ function rInfo(heroes){
       var lh=ALL.find(function(x){return x.id===lid});
       if(!lh)return"";
       var tip=lh.d?lh.d.replace(/"/g,"&quot;"):"";
-      return"<span class=\"hero-link\" onclick=\"cH='"+lid+"';rAll()\" data-tip=\"<b>"+lh.n+"</b><br>"+tip+"\" style=\"border-color:"+lh.c+"44;color:"+lh.c+"\">"+lh.n+"</span>";
+      return"<span class=\"hero-link\" onclick=\"navTo('"+lid+"')\" data-tip=\"<b>"+lh.n+"</b><br>"+tip+"\" style=\"border-color:"+lh.c+"44;color:"+lh.c+"\">"+lh.n+"</span>";
     }).join("");
     linksBlock="<div class=\"ipt\" style=\"border-top:1px solid var(--border)\"><div class=\"iptl\">Похожие пути</div><div>"+ltags+"</div></div>";
   }
@@ -638,7 +810,7 @@ function rInfo(heroes){
     }).join("");
     patsBlock="<div class=\"ipt\" style=\"border-top:1px solid var(--border)\"><div class=\"iptl\">Паттерны</div><div>"+ptags+"</div></div>";
   }
-  ip.innerHTML="<div class=\"ihd\"><div class=\"ihn\" style=\"color:"+h.c+"\">"+h.n+"</div><div class=\"ihw\">"+h.w+"</div></div><div class=\"idd\">"+h.d+"</div>"+ablock+"<div class=\"ipt\"><div class=\"iptl\">Поворотные точки</div><table><thead><tr><th style=\"width:28px\"></th><th style=\"width:120px\">координаты</th><th>момент</th></tr></thead><tbody>"+rows+"</tbody></table></div>"+qblock+linksBlock+patsBlock;
+    ip.innerHTML="<div class=\"ihd\"><div class=\"ihn\" style=\"color:"+h.c+"\">"+h.n+"</div><div class=\"ihw\">"+h.w+"</div></div>"+"<div class=\"idd\">"+h.d+"</div>"+ablock+"<div class=\"ipt\"><div class=\"iptl\">Описание пути</div><table><thead><tr><th style=\"width:28px\"></th><th style=\"width:120px\">координаты</th><th>момент</th></tr></thead><tbody>"+rows+"</tbody></table></div>"+qblock+linksBlock+patsBlock;
 }
 
 function hlPt(idx){
@@ -663,11 +835,58 @@ function hlPtFromChart(idx){
 }
 function rAll(){var h=gh(cU);rTabs();rSb(h);rChart(h);rInfo(h)}
 var APT=-1;
+var navHistory=[];
+function navTo(id){
+  // Переключаем на нужную вкладку
+  var h=ALL.find(function(x){return x.id===id;});
+  if(h){
+    // Найти подходящую вкладку для этого героя
+    var targetU=h.u;
+    var tabExists=UNI.some(function(t){
+      if(t.id==="all") return false;
+      var m=UNI_MAP[t.id];
+      return m ? m.indexOf(targetU)>=0 : t.id===targetU;
+    });
+    if(tabExists){
+      // Найти конкретную вкладку
+      UNI.forEach(function(t){
+        if(t.id==="all") return;
+        var m=UNI_MAP[t.id];
+        var matches=m ? m.indexOf(targetU)>=0 : t.id===targetU;
+        if(matches) cU=t.id;
+      });
+    }
+  }
+  cH=id;
+  rAll();
+}
+
+
+// Исходный UNI до фильтрации — сохраняем один раз
+var UNI_BASE=UNI.slice();
+
+function applyFeatures(){
+  // Welcome screen
+  var welcome=document.getElementById("welcome");
+  if(welcome) welcome.style.display=FEATURES.welcome?"":"none";
+  // Flow кнопка — скрыть через overlay кнопку если есть
+  var flowBtn=document.getElementById("flow-btn");
+  if(flowBtn) flowBtn.style.display=FEATURES.flow?"":"none";
+  // Пересобрать UNI из базового — фильтруем отключённые вкладки
+  UNI=UNI_BASE.filter(function(t){
+    if(t.id==="anime"  && !FEATURES.anime)  return false;
+    if(t.id==="skazki" && !FEATURES.skazki) return false;
+    return true;
+  });
+}
+applyFeatures();
 rAll();
-</script>
-<div class="axtip" id="axtip"></div>
-<script>
+
+// ================================================================
+// ТУЛТИПЫ
+// ================================================================
 (function(){
+  (function(){
   var tip=document.getElementById("axtip");
   var DATA={
     "lbl-x":"<b>Эволюция личности</b><br>Уровень определяется не знаниями и не поведением, а тем, из какого центра человек воспринимает мир: выживание, племя, эго, порядок, достижение, сообщество, система, поток. Каждый следующий уровень не отменяет предыдущий — он включает его и видит шире.",
@@ -690,85 +909,12 @@ rAll();
     tip.style.left=x+"px";tip.style.top=y+"px";
   }
 })();
-</script>
-
-<div class="axtip" id="axtip"></div>
-<script>
-(function(){
-  var tip=document.getElementById("axtip");
-  var DATA={"lbl-x":"<b>Эволюция личности</b><br>Уровень определяется ценностями человека — из чего он исходит, принимая решения.","lbl-y":"<b>Эволюция духа</b><br>Уровень определяется тем, насколько человек действует из страха или из любви."};
-  document.addEventListener("mouseover",function(e){
-    var id=e.target.id;
-    var txt=(e.target.getAttribute&&e.target.getAttribute("data-tip"))||(e.target.parentElement&&e.target.parentElement.getAttribute&&e.target.parentElement.getAttribute("data-tip"));
-    if(DATA[id]){tip.innerHTML=DATA[id];tip.style.display="block";pos(e);}
-    else if(txt){tip.innerHTML=txt;tip.style.display="block";pos(e);}
-    else tip.style.display="none";
-  });
-  document.addEventListener("mousemove",function(e){if(tip.style.display==="block")pos(e);});
-  function pos(e){var x=e.clientX+14,y=e.clientY-10;if(x+290>window.innerWidth)x=e.clientX-300;if(y+90>window.innerHeight)y=e.clientY-90;tip.style.left=x+"px";tip.style.top=y+"px";}
 })();
-</script>
-<style>
-/* ===== FLOW OVERLAY ===== */
-#flow-overlay{position:fixed;inset:0;background:rgba(13,13,15,0.97);z-index:200;display:none;overflow-y:auto}
-#flow-overlay.open{display:flex;align-items:flex-start;justify-content:center;padding:48px 24px 80px}
-.flow-wrap{max-width:680px;width:100%}
-.flow-close{position:fixed;top:20px;right:24px;background:transparent;border:.5px solid var(--border2);border-radius:4px;padding:6px 14px;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;z-index:201}
-.flow-close:hover{color:var(--text);border-color:var(--text3)}
-.flow-step-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:16px}
-.flow-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(22px,4vw,34px);font-weight:300;line-height:1.2;margin-bottom:8px;color:var(--text)}
-.flow-title em{font-style:italic;color:var(--accent)}
-.flow-sub{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:28px}
-.flow-progress{display:flex;gap:6px;margin-bottom:36px}
-.flow-prog-dot{width:28px;height:2px;border-radius:2px;background:var(--border2);transition:background .3s}
-.flow-prog-dot.done{background:var(--accent)}
-.flow-prog-dot.active{background:var(--text2)}
-.flow-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:28px}
-.flow-card{background:var(--bg2);border:.5px solid var(--border);border-radius:6px;padding:18px;cursor:pointer;transition:border-color .2s,background .2s;user-select:none;display:flex;flex-direction:column;gap:0}
-.flow-card:hover{background:var(--bg3)}
-.flow-card.selected{border-color:var(--accent)!important;background:rgba(200,169,110,0.06)}
-.flow-card-num{font-size:9px;color:var(--text3);letter-spacing:.12em;margin-bottom:10px;font-family:'JetBrains Mono',monospace}
-.flow-card-sit{font-size:12px;color:var(--text);line-height:1.65;flex:1}
-.flow-card-check{width:18px;height:18px;border-radius:50%;border:.5px solid var(--border2);margin-top:14px;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .2s;flex-shrink:0}
-.flow-card.selected .flow-card-check{background:var(--accent);border-color:var(--accent);color:#000}
-.flow-hint{font-size:11px;color:var(--text3);margin-bottom:20px;line-height:1.6;padding:10px 14px;background:var(--bg2);border-left:2px solid var(--border2);border-radius:0 4px 4px 0}
-.flow-btn{padding:10px 28px;border:.5px solid var(--accent);border-radius:4px;background:rgba(200,169,110,0.08);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;cursor:pointer;transition:background .2s}
-.flow-btn:hover{background:rgba(200,169,110,0.18)}
-.flow-btn:disabled{opacity:.25;cursor:default;pointer-events:none}
-.flow-btn-sec{padding:10px 20px;border:.5px solid var(--border2);border-radius:4px;background:transparent;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;cursor:pointer}
-.flow-btn-sec:hover{border-color:var(--text3);color:var(--text2)}
-/* Result */
-.flow-result-map{width:100%;background:var(--bg2);border:.5px solid var(--border);border-radius:6px;margin-bottom:28px;overflow:hidden}
-.flow-result-reveal{background:var(--bg2);border:.5px solid var(--accent);border-radius:6px;padding:24px;margin-bottom:24px;text-align:center}
-.flow-reveal-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
-.flow-reveal-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(28px,5vw,44px);font-weight:300;line-height:1.1;margin-bottom:4px}
-.flow-reveal-work{font-size:10px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
-.flow-reveal-desc{font-size:13px;color:var(--text2);line-height:1.75}
-.flow-result-section{margin-bottom:28px}
-.flow-result-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
-.flow-result-text{font-size:13px;color:var(--text2);line-height:1.75}
-.flow-result-q{font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-style:italic;color:var(--text);line-height:1.65;padding:16px 20px;background:rgba(200,169,110,0.05);border-left:2px solid var(--accent);border-radius:0 4px 4px 0}
-.flow-next-list{display:flex;flex-direction:column;gap:10px}
-.flow-next-card{background:var(--bg3);border:.5px solid var(--border);border-radius:5px;padding:14px 18px;cursor:pointer;transition:border-color .2s}
-.flow-next-card:hover{border-color:var(--border2)}
-.flow-next-card-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;margin-bottom:4px}
-.flow-next-card-desc{font-size:11px;color:var(--text3);line-height:1.55}
 
-.flow-fork-card{background:var(--bg2);border:.5px solid var(--border);border-radius:6px;padding:16px 20px;cursor:pointer;transition:border-color .2s,background .2s}
-.flow-fork-card:hover{background:var(--bg3)}
-.flow-fork-hero{font-family:"Cormorant Garamond",Georgia,serif;font-size:17px;margin-bottom:6px;line-height:1.2}
-.flow-fork-dir{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;opacity:.8}
-.flow-fork-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px}
-.flow-fork-end{font-size:11px;color:var(--text3);font-style:italic}
-
-</style>
-
-<div id="flow-overlay">
-  <button class="flow-close" onclick="closeFlow()">✕ закрыть</button>
-  <div class="flow-wrap" id="flow-content"></div>
-</div>
-
-<script>
+// ================================================================
+// FLOW — «Найти свой путь»
+// ================================================================
+if (FEATURES.flow) {
 // ===== FLOW ENGINE v2 =====
 var flowState={round:0,pool:[],chosen:[],history:[],center:null,finalHero:null,usedIds:[]};
 
@@ -1197,23 +1343,29 @@ window.closeFlow = closeFlow;
 window.flowToggleCard = flowToggleCard;
 window.flowNext = flowNext;
 window.goToHero = goToHero;
-</script>
+}
 
-
-<style>
-.cmp-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:3px;font-size:10px;font-family:"JetBrains Mono",monospace;cursor:pointer;border:.5px solid;transition:opacity .2s}
-.cmp-tag:hover{opacity:.8}
-.cmp-tag-rm{font-size:12px;line-height:1;opacity:.6}
-.cmp-tag-rm:hover{opacity:1}
-.hb.cmp-on{border-left-width:3px!important;background:var(--bg3)!important}
-</style>
-
-<script>
+// ================================================================
+// COMPARE — Сравнение траекторий
+// ================================================================
+if (FEATURES.compare) {
 var cmpMode=false;
 var cmpIds=[];   // selected hero ids for compare
 
 function toggleCmpMode(on){
+  // Если вызван без аргумента — переключаем
+  if(typeof on==="undefined") on=!cmpMode;
   cmpMode=on;
+  // Обновляем вид кастомного чекбокса
+  var box=document.getElementById("cmp-box");
+  var lbl=document.getElementById("cmp-label");
+  var txt=document.getElementById("cmp-label-text");
+  if(box){
+    box.style.background=on?"var(--accent)":"transparent";
+    box.style.borderColor=on?"var(--accent)":"var(--text3)";
+    box.innerHTML=on?'<svg width="8" height="8" viewBox="0 0 8 8"><polyline points="1,4 3,6 7,2" fill="none" stroke="#0d0d0f" stroke-width="1.5"/></svg>':"";
+  }
+  if(lbl) lbl.style.borderColor="transparent";
   if(!on){
     cmpIds=[];
     renderCmpList();
@@ -1230,7 +1382,7 @@ function cmpSelectHero(id){
     cmpIds.push(id);
   }
   renderCmpList();
-  rChartCompare();
+  rChart(gh(cU));  // перерисовываем карту с учётом cmpMode
   // Update sidebar highlight
   document.querySelectorAll('.hb[data-hid]').forEach(function(el){
     var hid=el.getAttribute('data-hid');
@@ -1263,28 +1415,50 @@ function cmpOpenInfo(id){
   rInfo(gh(cU));
 }
 
-function rChartCompare(){
-  if(!cmpMode||cmpIds.length===0){rAll();return;}
-  // Get pool: all heroes from all tabs of selected heroes, or current tab
-  var pool=gh(cU);
-  // If selected heroes include ones not in current tab, expand to ALL
-  var allInTab=cmpIds.every(function(id){return pool.some(function(h){return h.id===id;});});
-  if(!allInTab) pool=ALL;
-  // mkSVG now reads cmpMode+cmpIds to set opacity — pass '__cmp__' as aid
-  // so no single hero is "active" via aid, but cmpIds heroes get opacity:1
-  var svgWrap=document.getElementById('chart-svg');
-  if(!svgWrap) return;
-  var newSvg=mkSVG(pool,'__cmp__',APT,HOVERPT);
-  newSvg.id='chart-svg';
-  svgWrap.parentNode.replaceChild(newSvg,svgWrap);
-}
+// rChartCompare removed — logic merged into rChart
 
 // Export
 window.toggleCmpMode=toggleCmpMode;
 window.cmpSelectHero=cmpSelectHero;
 window.cmpOpenInfo=cmpOpenInfo;
 window.renderCmpList=renderCmpList;
+}
 </script>
-
 </body>
-</html>
+</html
+  ,{id:"tolstoy_bio",u:"biography",n:"Лев Толстой",w:"Биография",c:"#8FA680",
+    d:"Прожил дольше всех — и умер в пути. Пропасть между тем что знал и тем как жил стала невыносимой.",
+    sit:"Граф, гений, моралист. Проповедовал опрощение — жил в роскоши. В 82 года тайно ушёл из дома. Умер на станции Астапово.",
+    question:"Что делать с пропастью между тем что знаешь — и тем как живёшь?",
+    links:["andrey","levin","pierre","sergiy"],
+    p:[
+      {l:"A",s:"beige",v:14,m:"Рождение — природная живость, высокий старт"},
+      {l:"B",s:"violet",v:13,m:"Смерть матери (2 года) — первое знание потери"},
+      {l:"C",s:"red",v:12,m:"Смерть отца (9 лет) — падение"},
+      {l:"D",s:"red-blue",v:13,m:"16–22: кутежи + дневник — первая рефлексия"},
+      {l:"E",s:"blue-orange",v:15,m:"22–27: Кавказ, «Детство» — интеллект как путь"},
+      {l:"F",s:"orange",v:14,m:"27–35: слава, Европа, казнь в Париже — откат"},
+      {l:"G",s:"orange-green",v:17,m:"35–50: великие романы, Арзамасский ужас — пик"},
+      {l:"H",s:"green",v:15,m:"50–55: «Исповедь», кризис — знание обгоняет жизнь"},
+      {l:"I",s:"green",v:16,m:"55–75: опрощение — медленный подъём"},
+      {l:"J",s:"green-yellow",v:16,m:"82: уход из Ясной Поляны, Астапово — единственно последовательный поступок"}
+    ]}
+  ,{id:"dostoevsky_bio",u:"biography",n:"Фёдор Достоевский",w:"Биография",c:"#9B7B6E",
+    d:"Удерживал страх и любовь одновременно — через разных персонажей. Страдание как способ познания.",
+    sit:"Приговорён к расстрелу — помилован в последний момент. Каторга. Игромания. Смерть близких. И при этом — «Братья Карамазовы».",
+    question:"Можно ли любить человека — зная всё самое тёмное что в нём есть?",
+    links:["raskolnikov","myshkin","ivan_karamazov","alyosha","mitya"],
+    p:[
+      {l:"A",s:"beige",v:15.5,m:"Рождение в больнице для бедных — контакт с чужим страданием с рождения"},
+      {l:"B",s:"red",v:14.5,m:"2–15: строгий отец, святая мать, религия, нищета"},
+      {l:"C",s:"red-blue",v:13,m:"15 лет: смерть матери и Пушкина — телесное знание о смерти"},
+      {l:"D",s:"blue",v:12,m:"18 лет: гибель отца, первые эпилептические припадки"},
+      {l:"E",s:"blue-orange",v:15,m:"23–25: «Бедные люди» написаны из любви — триумф"},
+      {l:"F",s:"orange",v:12.5,m:"25–26: «Двойник» написан из страха — провал"},
+      {l:"G",s:"orange-green",v:14,m:"26–28: Петрашевский кружок — идеи справедливости"},
+      {l:"H",s:"green",v:19,m:"28 лет: инсценировка расстрела — мгновенный пик: «жизнь везде жизнь»"},
+      {l:"I",s:"green",v:16.5,m:"28–38: каторга — символ веры через Христа"},
+      {l:"J",s:"green",v:14,m:"38–49: игромания, смерть жены, брата, дочери — широкий диапазон"},
+      {l:"K",s:"green-yellow",v:18,m:"49–59: «Братья Карамазовы», Оптина пустынь, Пушкинская речь"}
+    ]}
+>
