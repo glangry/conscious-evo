@@ -169,6 +169,7 @@ tr:last-child td{border-bottom:none}
 </header>
 </div>
 <div class="tabs" id="tabs"></div>
+<div id="patterns-bar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)"></div>
 <div class="layout">
 <div style="grid-column:1;grid-row:1;display:flex;flex-direction:column;gap:0">
 <div style="position:relative;margin-bottom:8px">
@@ -211,7 +212,7 @@ var FEATURES = {
   flow:     false,  // «Найти свой путь» — временно отключено
   compare:  true,   // Сравнение траекторий
   welcome:  true,   // Экран приветствия
-  patterns: true,   // Паттерны
+  patterns: false,  // Паттерны — временно скрыты
   anime:    false,  // временно скрыта
   skazki:   false,  // временно скрыта
 };
@@ -221,6 +222,7 @@ var FEATURES = {
 // ================================================================
 var UNI=[
   {id:"all",lb:"Все"},
+  {id:"personal",lb:"Личное"},
   {id:"biography",lb:"Биографии"},
   {id:"ruslit",lb:"Русская лит-ра"},
   {id:"worldlit",lb:"Мировая лит-ра"},
@@ -234,6 +236,7 @@ var UNI=[
 // Mapping: tab id -> which hero u-values it includes
 var UNI_MAP={
   "all":null,
+  "personal":["personal"],
   "biography":["biography"],
   "ruslit":["ruslit"],
   "worldlit":["worldlit"],
@@ -265,7 +268,19 @@ var ALL=[
   {id:"siddhartha",sit:"Духовный поиск с рождения как долг. Уходит от этого — погружается в мир. И обнаруживает что путь через мир тоже был частью пути.",u:"worldlit",n:"Сиддхартха",w:"Сиддхартха, Гессе",c:"#E07070",d:"Самый длинный путь. Подъём — падение в материализм — кризис у реки — финальный подъём.",question:"Нужно ли пройти через материальный мир — чтобы по-настоящему его отпустить?",links:["pierre","zima","alyosha"],p:[{l:"A",s:"blue",v:13.5,m:"Сын брахмана — духовный поиск как долг"},{l:"B",s:"orange",v:8,m:"Камала, торговля — погружение в материальный мир"},{l:"C",s:"teal",v:22,m:"Река — растворение в потоке, принятие всего"}]},
   {id:"atlas",u:"worldlit",n:"Дагни Таггарт",w:"Атлант расправил плечи",c:"#C9B99A",d:"Апофеоз оранжевого в литературе. Духовная стагнация намеренна.",question:"Что происходит с человеком, когда разум объявляется высшей ценностью — и больше ничего?",links:["walter","strange"],p:[{l:"A",s:"blue",v:12,m:"Синий фон — долг, традиция, общество"},{l:"B",s:"orange",v:12.5,m:"Оранжевый триумф — разум и индивидуализм как финал"}]},
   {id:"sergiy",u:"ruslit",n:"Отец Сергий",w:"Отец Сергий, Толстой",c:"#7A8FA6",d:"Весь духовный подъём был эго в религиозной одежде. Падение обнажило это.",analysis:"Весь духовный подъём был эго в религиозной одежде — падение это обнажило. Точка B слава чудотворца — снаружи святость внутри тщеславие. Точка D Пашенька — простая женщина которую Сергий считал ниже себя оказывается давно живёт так к чему он только пришёл.",question:"Можно ли отличить настоящее смирение от его имитации?",links:["preobrazhensky","andrey"],p:[{l:"A",s:"blue",v:13.5,m:"Офицер — честь, статус, иерархия"},{l:"B",s:"blue-orange",v:18.5,m:"Слава чудотворца — ложный пик, эго в рясе"},{l:"C",s:"blue",v:7.5,m:"Падение — грех, крах, бегство"},{l:"D",s:"green",v:20.5,m:"Пашенька — настоящее смирение"}]},
-  {id:"joker",sit:"Видит насквозь: правила, роли, иллюзии. Использует это не чтобы помочь — а чтобы показать что всё бессмысленно.",u:"films",n:"Джокер",w:"Тёмный рыцарь, Нолан",c:"#C8A030",d:"Максимальный разрыв между осями. Высокое понимание системы при демоническом духовном уровне. Архонт.",question:"Можно ли видеть иллюзии системы — и при этом не стать разрушителем?",links:["ivan_karamazov","tyler","malvo"],patterns:["high_mind_low_spirit"],p:[{l:"A",s:"yellow",v:6,m:"Агент хаоса — видит иллюзии общества, использует для разрушения"}]},
+  {id:"joker",sit:"Видит насквозь: правила, роли, иллюзии. Использует это не чтобы помочь — а чтобы показать что всё бессмысленно.",u:"films",n:"Джокер (Хит Леджер)",w:"Тёмный рыцарь, Нолан",c:"#C8A030",d:"Максимальный разрыв между осями. Высокое понимание системы при демоническом духовном уровне. Архонт.",question:"Можно ли видеть иллюзии системы — и при этом не стать разрушителем?",links:["ivan_karamazov","tyler","malvo"],patterns:["high_mind_low_spirit"],p:[{l:"A",s:"yellow",v:6,m:"Агент хаоса — видит иллюзии общества, использует для разрушения"}]},
+  {id:"joker_phoenix",u:"films",n:"Джокер (Хоакин Феникс)",w:"Джокер, 2019",c:"#8B6914",
+    d:"Артур Флек — человек которого мир сломал. Трансформация через унижение в символ хаоса.",
+    sit:"Работает клоуном, живёт с мамой, мечтает стать комиком. Общество отвергает его на каждом шагу. В какой-то момент что-то ломается — и это освобождает.",
+    question:"Что происходит с человеком которого слишком долго не замечали и слишком часто унижали?",
+    links:["joker","raskolnikov","eren"],
+    patterns:["transformation"],
+    p:[
+      {l:"A",s:"violet",v:9,m:"Артур Флек — сломленный, невидимый, мечтает о признании"},
+      {l:"B",s:"red",v:7,m:"Первые убийства — случайные, из самозащиты и унижения"},
+      {l:"C",s:"red",v:5,m:"Гибель матери, предательство — последние связи рвутся"},
+      {l:"D",s:"red",v:4,m:"Джокер — рождение символа через полное разрушение личности"}
+    ]},
   {id:"batman",u:"films",n:"Бэтмен",w:"Тёмный рыцарь, Нолан",c:"#5A7A9A",d:"Действует из боли, но внутри выше своего уровня.",question:"Где граница между служением из ценностей и служением из боли?",links:["jon","aragorn"],p:[{l:"A",s:"red-orange",v:13.5,m:"Брюс Уэйн — травма, личная воля"},{l:"B",s:"blue",v:14.5,m:"Бэтмен — долг, правила, Готэм как иерархия"},{l:"C",s:"green",v:15.5,m:"Передаёт символ, уходит — отпускает роль"}]},
   {id:"anakin",sit:"Всё есть — талант, признание, любовь. Но страх потерять это оказывается сильнее всего остального.",u:"films",n:"Энакин / Вейдер",w:"Звёздные войны",c:"#C0392B",d:"Страх потери как единственный триггер всего пути.",question:"Есть ли в вашей жизни страх, который вы контролируете — или который контролирует вас?",links:["walter","michael_c"],p:[{l:"A",s:"blue",v:13.5,m:"Раб на Татуине — чистота, талант, надежда"},{l:"B",s:"orange",v:15.5,m:"Джедай на пике — нарастает страх потери"},{l:"C",s:"red",v:3.5,m:"Убийство детей-джедаев — переход на тёмную сторону"},{l:"D",s:"blue",v:3.5,m:"Дарт Вейдер — тёмная сторона как новый порядок"},{l:"E",s:"green",v:17.5,m:"Спасает Люка — искупление через жертву"}]},
   {id:"luke",sit:"Мечтает о большем, но живёт в ограниченном мире. Зов приходит — и приходится выбирать.",u:"films",n:"Люк Скайуокер",w:"Звёздные войны",c:"#F0C040",d:"Классический путь героя. Отказ убить отца — переход через границу.",question:"Что значит победить — не уничтожив противника, а отказавшись убивать?",links:["aragorn","frodo"],p:[{l:"A",s:"violet",v:11.5,m:"Фермер на Татуине — мечтает, но не действует"},{l:"B",s:"orange",v:13.5,m:"Присоединяется к Альянсу — личный героизм"},{l:"C",s:"orange",v:15.5,m:"Уничтожает Звезду Смерти — пик героического эго"},{l:"D",s:"green",v:16.5,m:"Отказывается убить отца — переход через границу"},{l:"E",s:"yellow",v:18.5,m:"Принимает свет и тьму — интеграция"}]},
@@ -496,6 +511,47 @@ var ALL=[
       {l:"J",s:"green",v:14,m:"38–49: игромания, смерть жены, брата, дочери — широкий диапазон"},
       {l:"K",s:"green-yellow",v:18,m:"49–59: «Братья Карамазовы», Оптина пустынь, Пушкинская речь"}
     ]}
+  ,{id:"author",u:"personal",n:"Автор",w:"Личная биография",c:"#7F77DD",
+    d:"От фармацевта к картографу сознания. Путь через покер, Перу и ашрам к пониманию как работает сознание.",
+    sit:"Уволился с высокой зарплаты ради обещания себе. Прошёл через депрессию, аяваску, дно на Бали и пять месяцев практик в ашраме. Сейчас строит атлас пробуждения.",
+    question:"Как понять что ты идёшь своим путём — а не тем который ожидают другие?",
+    p:[
+      {l:"A",s:"violet",v:13,m:"5 лет: счастливое детство — любящая семья, ранний интеллект"},
+      {l:"B",s:"violet",v:11,m:"13 лет: период одиночества — первый опыт внутренней силы"},
+      {l:"C",s:"blue",v:12,m:"19 лет: вуз по выбору родителей — идеальный снаружи, потерянный внутри"},
+      {l:"D",s:"orange",v:13,m:"24 года: прокол уха — уволился из фармкомпании, первое действие из себя"},
+      {l:"E",s:"orange",v:13,m:"27 лет: корпоративный фильм — талант нашёл выход, но место было не своё"},
+      {l:"F",s:"orange",v:15,m:"29 лет: покер 100$ → 200 000$ — первый осознанный выбор, доказательство пути"},
+      {l:"G",s:"orange-green",v:14,m:"31 год: творческий поиск — фортепиано, театр, кино, от достижения к смыслу"},
+      {l:"H",s:"green",v:17,m:"32 года: Экхарт Толле дважды — депрессия, рациональная картина рухнула"},
+      {l:"I",s:"green",v:18,m:"33 года: Перу, аяваска — ощущение что всё на своём месте"},
+      {l:"J",s:"green",v:18,m:"33 года: 16 человек 12 часов — первый порыв отдавать"},
+      {l:"K",s:"green",v:14,m:"37 лет: дно на Бали — деньги, здоровье, расставание, осуждение"},
+      {l:"L",s:"green-yellow",v:20,m:"38 лет: ашрам на Шри-Ланке — пять месяцев практик, пик вертикали"},
+      {l:"M",s:"green-yellow",v:18,m:"39 лет: детское образование на Бали — идеи сознания встретились с детьми"},
+      {l:"N",s:"green-yellow",v:19,m:"40 лет: карта эволюции сознания — атлас пробуждения, этот момент"}
+    ]}
+  ,{id:"guest2",u:"biography",n:"Гость 2",w:"Биография",c:"#9B8AAA",
+    d:"Вертикальный рост через принятие себя. От семейного напряжения — к рождению собственного стиля и живой мечте.",
+    sit:"Татуировщик. Путь от тёплого детства через страх и поиск к принятию себя и встрече с теми кто разделяет смысл.",
+    question:"Как найти себя — не через достижение, а через постепенное принятие того кем ты уже являешься?",
+    links:["margarita","siddhartha","obiwan"],
+    patterns:[{id:"long_search",from:"A",to:"G"},{id:"dissolution",at:"G"}],
+    p:[
+      {l:"A",s:"violet",v:13,m:"6 лет: тёплый старт — любящая среда, высокий старт"},
+      {l:"B",s:"blue",v:11,m:"10 лет: семейное напряжение — первый страх, падение"},
+      {l:"C",s:"orange",v:13,m:"18 лет: выбор свободы — действие из себя"},
+      {l:"D",s:"orange",v:14,m:"25 лет: вход в тату — любовь как профессия"},
+      {l:"E",s:"orange-green",v:15,m:"26 лет: критика и рост — смешанное, но движение вверх"},
+      {l:"F",s:"green",v:16,m:"28 лет: рождение стиля — любовь к своему голосу"},
+      {l:"G",s:"green-yellow",v:17,m:"28 лет: принятие себя — любовь без условий"},
+      {l:"H",s:"yellow",v:17,m:"29 лет: встреча с Ромой — любовь как связь"},
+      {l:"I",s:"yellow",v:18,m:"32 года: живая мечта — настоящее из любви"}
+    ]}
+  ,{id:"guest1",u:"biography",n:"Гость 1",w:"Биография",c:"#7B9EA6",d:"Несколько циклов создания и разрушения.",sit:"Лидер района в 14, бизнес в 22, крах в 24, покер, дно в 36.",question:"Что происходит когда человек теряет всё — и выбирает начать заново?",links:["mitya","pierre","pirsig"],patterns:[{id:"through_the_bottom",from:"D",to:"H",key:"G"},{id:"long_search",from:"A",to:"J"}],p:[{l:"A",s:"violet",v:11,m:"6 лет: отец уходит"},{l:"B",s:"red",v:10,m:"14 лет: лидер района"},{l:"C",s:"orange",v:10,m:"22 года: первый бизнес"},{l:"D",s:"orange",v:7,m:"24 года: бизнес рухнул"},{l:"E",s:"orange",v:11,m:"28 лет: покер"},{l:"F",s:"green",v:9,m:"33 года: потеря души в игре"},{l:"G",s:"green",v:8,m:"36 лет: депрессия и дно"},{l:"H",s:"green",v:16,m:"37 лет: решение жить"},{l:"I",s:"yellow",v:17,m:"37-38 лет: Бали, обнуление"},{l:"J",s:"yellow",v:18,m:"~40 лет: новая искра"}]}
+  ,{id:"hitler_bio",u:"biography",n:"Адольф Гитлер",w:"Биография",c:"#4A4A4A",sit:"Провинциальный неудачник стал властителем Европы.",d:"Крайний случай паттерна ум без сердца.",question:"Как высокая функциональность уживается с полным отсутствием живого контакта с другим человеком?",links:["walter","ivan_karamazov","michael","joker","raskolnikov"],patterns:[{id:"mind_without_heart",from:"D",to:"J"},{id:"success_trap",from:"E",to:"H",key:"G"},{id:"stuckness",from:"A",to:"J"}],p:[{l:"A",s:"violet",v:9,m:"Детство в Линце — деспотичный отец"},{l:"B",s:"red",v:8,m:"Провал в академию — нарратив внешнего врага"},{l:"C",s:"red",v:7,m:"Венское дно — ночлежки, брошюры"},{l:"D",s:"blue",v:8,m:"Первая мировая — принадлежность к структуре"},{l:"E",s:"red",v:7,m:"Мюнхен 1919-23 — ораторский дар, путч"},{l:"F",s:"orange",v:6,m:"Путь к власти — люди как масса"},{l:"G",s:"red",v:5,m:"1933-38 — диктатура, изоляция"},{l:"H",s:"red",v:4,m:"Мюнхен 1938 — пик успеха"},{l:"I",s:"red",v:3,m:"Война 1941-44 — несуществующие дивизии"},{l:"J",s:"beige",v:2,m:"Бункер 1945 — тот же нарратив"}]}
+  ,{id:"freddy",u:"films",n:"Фредди Крюгер",w:"Кошмар на улице Вязов",c:"#8B1A1A",d:"Жертва толпы ставший орудием мести.",sit:"Сторож которого сожгли родители его жертв. Вернулся убивать во снах.",question:"Что происходит с болью которую никто не увидел?",links:["joker_phoenix","raskolnikov","narrator"],patterns:[{id:"one_step_down",at:"B"},{id:"mind_without_heart",from:"B",to:"D"}],p:[{l:"A",s:"red",v:8,m:"Сторож — отверженный, нелюбимый"},{l:"B",s:"red",v:4,m:"Сожжён толпой — боль без свидетеля"},{l:"C",s:"red",v:3,m:"Возрождение как монстр"},{l:"D",s:"beige",v:2,m:"Вечный кошмар — орудие страха"}]}
+  ,{id:"martin_eden",u:"worldlit",n:"Мартин Иден",w:"Мартин Иден, Джек Лондон",c:"#7B9B8A",d:"Поднялся из низов и обнаружил что те ради кого поднимался не стоили подъёма.",sit:"Моряк без образования влюбляется в девушку из высшего общества. Успех. И понимание что Рут любила не его.",question:"Что делать когда достиг всего — и обнаружил что хотел не того?",links:["raskolnikov","tatarsky","roquentin","pirsig"],patterns:[{id:"success_trap",from:"C",to:"E",key:"D"},{id:"stuckness",from:"D",to:"E"}],p:[{l:"A",s:"red",v:10,m:"Моряк из низов — живой ум без огранки"},{l:"B",s:"orange",v:12,m:"Влюбился в Рут — самообразование"},{l:"C",s:"orange",v:14,m:"Первые публикации — признание"},{l:"D",s:"orange",v:13,m:"Успех и слава — Рут ушла"},{l:"E",s:"orange",v:9,m:"Разочарование — прыгает за борт"}]}
 ];
 
 var W=590,H=430,L=82,R=W-60,T=22,B=H-44;
@@ -599,7 +655,8 @@ function mkSVG(heroes,aid,apt,hpt){
   for(var hi=0;hi<heroes.length;hi++){
     var h=heroes[hi];
     var ia=aid===h.id||(typeof cmpMode!=="undefined"&&cmpMode&&cmpIds.indexOf(h.id)>=0);
-    var g=el("g",{opacity:ia?"1":"0","pointer-events":ia?"all":"none"},svg);
+    var inCmp=(typeof cmpMode!=="undefined"&&cmpMode&&cmpIds.indexOf(h.id)>=0);
+    var g=el("g",{opacity:ia?"1":"0","pointer-events":(ia||inCmp)?"all":"none"},svg);
     g.style.transition="opacity 0.3s";
     var pts=h.p;
     if(pts.length===1){
@@ -640,7 +697,7 @@ function mkSVG(heroes,aid,apt,hpt){
         else if(pi===cs.length-1)circ=el("circle",{cx:cs[pi].x,cy:cs[pi].y,r:isApt?"5":"3.5",fill:"none",stroke:h.c,"stroke-width":"1.5",opacity:isApt?"1":"0.7"},g);
         else circ=el("circle",{cx:cs[pi].x,cy:cs[pi].y,r:isApt?"5":"2.5",fill:h.c,"fill-opacity":isApt?"1":"0.5"},g);
         circ.style.cursor="pointer";
-        (function(idx,hid){circ.onclick=function(e){e.stopPropagation();if(cH!==hid){cH=hid;rAll();}hlPtFromChart(idx);};})(pi,h.id);
+        (function(idx,hid){circ.onclick=function(e){e.stopPropagation();if(cH!==hid){cH=hid;if(!cmpMode)rAll();else{rInfo(ALL);renderCmpList();}}hlPtFromChart(idx);};})(pi,h.id);
       }
     }
     if(aid===h.id){
@@ -682,6 +739,28 @@ function gh(u){
   else{var m=UNI_MAP[u];if(m)base=ALL.filter(function(h){return m.indexOf(h.u)>=0});else base=ALL.filter(function(h){return h.u===u});}
   if(cPATTERN) base=base.filter(function(h){return h.patterns&&h.patterns.indexOf(cPATTERN)>=0});
   return base.sort(function(a,b){return a.n.localeCompare(b.n,"ru")});
+}
+
+function rPatterns(){
+  var bar=document.getElementById("patterns-bar");
+  if(!bar||!FEATURES.patterns)return;
+  bar.innerHTML="";
+  PATTERNS.forEach(function(p){
+    var isOn=cPATTERN===p.id;
+    var btn=document.createElement("button");
+    btn.style.cssText="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:3px;"
+      +"border:.5px solid "+(isOn?p.color:p.color+"55")+";"
+      +"background:"+(isOn?p.color+"22":"transparent")+";"
+      +"color:"+(isOn?p.color:p.color+"99")+";"
+      +"font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;cursor:pointer;transition:all .2s;";
+    var dot=document.createElement("span");
+    dot.style.cssText="width:6px;height:6px;border-radius:50%;background:"+p.color+";flex-shrink:0;opacity:"+(isOn?"1":"0.6")+";";
+    btn.appendChild(dot);
+    btn.appendChild(document.createTextNode(p.name));
+    btn.setAttribute("data-tip","<b>"+p.name+"</b><br>"+p.desc);
+    (function(pid){btn.onclick=function(){selectPattern(pid);};})(p.id);
+    bar.appendChild(btn);
+  });
 }
 
 function rTabs(){
@@ -833,7 +912,7 @@ function hlPtFromChart(idx){
     rows[APT].scrollIntoView({behavior:"smooth",block:"nearest"});
   }
 }
-function rAll(){var h=gh(cU);rTabs();rSb(h);rChart(h);rInfo(h)}
+function rAll(){var h=gh(cU);rTabs();rPatterns();rSb(h);rChart(h);rInfo(h)}
 var APT=-1;
 var navHistory=[];
 function navTo(id){
