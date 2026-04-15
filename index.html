@@ -928,12 +928,14 @@ function rInfo(heroes){
   var visRows="",hidRows="";
   for(var i=0;i<h.p.length;i++){
     var p=h.p[i];
-    var rowHtml="<tr class=\"pt-row\" data-idx=\""+i+"\" onclick=\"hlPt("+i+")\" onmouseenter=\"hoverPt("+i+")\" onmouseleave=\"hoverPt(-1)\">"
+    var hidden=i>=VISIBLE;
+    var rowHtml="<tr class=\"pt-row"+(hidden?" ipt-more-rows\" style=\"display:none\"":"\"")
+      +" data-idx=\""+i+"\" onclick=\"hlPt("+i+")\" onmouseenter=\"hoverPt("+i+")\" onmouseleave=\"hoverPt(-1)\">"
       +"<td class=\"ptl\" style=\"color:var(--text3)\">"+p.l+"</td>"
       +"<td><span class=\"sdot\" style=\"background:"+(SDB[SDK.indexOf(p.s.split('-')[0])]||'#888')+"\" ></span><span style=\"font-size:10px;color:var(--text3)\">"+p.v+"</span></td>"
       +"<td class=\"ptm\">"+p.m+"</td>"
       +"</tr>";
-    if(i<VISIBLE) visRows+=rowHtml;
+    if(!hidden) visRows+=rowHtml;
     else hidRows+=rowHtml;
   }
   var hasMore=hidRows.length>0;
@@ -942,7 +944,7 @@ function rInfo(heroes){
     +"<div class=\"iptl\">Описание пути</div>"
     +"<table><thead><tr><th style=\"width:28px\"></th><th style=\"width:120px\">координаты</th><th>момент</th></tr></thead>"
     +"<tbody>"+visRows
-    +(hasMore?"<tr class=\"ipt-more-rows\" style=\"display:none\"><td colspan=\"3\" style=\"padding:0\"><table style=\"width:100%\"><tbody>"+hidRows+"</tbody></table></td></tr>":"")
+    +hidRows
     +(hasMore?"<tr><td colspan=\"3\" style=\"padding:4px 0\">"
       +"<button class=\"ipt-more-btn\" onclick=\"var ipt=this.closest(\'.ipt\');ipt.classList.toggle(\'open\');this.textContent=ipt.classList.contains(\'open\')?'Скрыть ▲':'Показать все этапы ▼'\" "
       +"style=\"background:transparent;border:none;color:var(--text3);font-size:10px;cursor:pointer;letter-spacing:.06em;font-family:\'JetBrains Mono\',monospace\">"
@@ -997,6 +999,7 @@ function applyFeatures(){
   UNI=UNI_BASE.filter(function(t){
     if(t.id==="anime"  && !FEATURES.anime)  return false;
     if(t.id==="skazki" && !FEATURES.skazki) return false;
+    if(t.id==="personal") return false;
     return true;
   });
 }
